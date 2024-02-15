@@ -2,12 +2,17 @@
 import AppHeader from './components/AppHeader.vue';
 import AppMain from './components/AppMain.vue';
 import AppFooter from './components/AppFooter.vue';
+import axios from 'axios';
 export default {
-  name: 'DefaultTemplate',
+  name: 'App',
 
   data() {
     return {
-      text: 'Template VueJS',
+      projects: [],
+      baseUrl: 'http://127.0.0.1:8000',
+      apiUrls: {
+        projects: '/api/projects',
+      },
     };
   },
 
@@ -16,11 +21,21 @@ export default {
     AppMain,
     AppFooter,
   },
+
+  methods: {
+    getProjects() {
+      axios.get(this.baseUrl + this.apiUrls.projects)
+        .then(response => { console.log(response.data.results.data); })
+        .catch(error => { console.error(error); });
+    }
+  },
+  created() {
+    this.getProjects();
+  }
 };
 </script>
 
 <template>
-  <h1>{{ text }}</h1>
   <AppHeader />
   <AppMain />
   <AppFooter />
