@@ -39,9 +39,11 @@ export default {
 </script>
 
 <template>
-  <AppHeader />
-  <AppMain :projects="projects" />
-  <AppFooter />
+  <div class="d-flex flex-column vh-100">
+    <AppHeader />
+    <AppMain :projects="projects" />
+    <AppFooter />
+  </div>
 </template>
 
 <style lang="scss"></style>
