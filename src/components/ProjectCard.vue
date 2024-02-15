@@ -20,7 +20,7 @@ export default {
 </script>
 
 <template>
-    <div class="card ">
+    <div class="card h-100">
         <div class="row g-0">
             <div :class="{ 'd-none': !project.img, 'col-md-4': project.img }">
                 <img :src="imgUrl + project.img" class="img-fluid rounded-start" :alt="project.name + ' thumb'">

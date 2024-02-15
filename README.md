@@ -18,5 +18,5 @@ L’esercizio di oggi è suddiviso in milestone ed è importante che ne seguiate
     2. Stampiamo in console i risultati e verifichiamo di ricevere i dati correttamente.
 - [x]Milestone 5
     1. Creiamo un nuovo componente ProjectCard, che corrisponde ad una card per visualizzare un progetto. Utilizziamo questo componente per visualizzare tutti i progetti ricevuti tramite API.
-- [ ]Bonus
+- [x]Bonus
     1. Gestire la paginazione dei risultati

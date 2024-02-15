@@ -6,42 +6,19 @@ import axios from 'axios';
 export default {
   name: 'App',
 
-  data() {
-    return {
-      projects: [],
-      baseUrl: 'http://127.0.0.1:8000',
-      apiUrls: {
-        projects: '/api/projects',
-      },
-    };
-  },
-
   components: {
     AppHeader,
     AppMain,
     AppFooter,
   },
 
-  methods: {
-    getProjects() {
-      axios.get(this.baseUrl + this.apiUrls.projects)
-        .then(response => {
-          this.projects = response.data.results.data;
-        }).catch(error => {
-          console.error(error);
-        });
-    }
-  },
-  created() {
-    this.getProjects();
-  }
 };
 </script>
 
 <template>
   <div class="d-flex flex-column vh-100">
     <AppHeader />
-    <AppMain :projects="projects" />
+    <AppMain />
     <AppFooter />
   </div>
 </template>
