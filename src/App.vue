@@ -25,8 +25,11 @@ export default {
   methods: {
     getProjects() {
       axios.get(this.baseUrl + this.apiUrls.projects)
-        .then(response => { console.log(response.data.results.data); })
-        .catch(error => { console.error(error); });
+        .then(response => {
+          this.projects = response.data.results.data;
+        }).catch(error => {
+          console.error(error);
+        });
     }
   },
   created() {
@@ -37,7 +40,7 @@ export default {
 
 <template>
   <AppHeader />
-  <AppMain />
+  <AppMain :projects="projects" />
   <AppFooter />
 </template>
 

@@ -16,7 +16,7 @@ L’esercizio di oggi è suddiviso in milestone ed è importante che ne seguiate
 - [x]Milestone 4
     1. Nel componente principale della nostra Vue App facciamo una chiamata API all’endpoint costruito nel progetto Laravel (milestone 1) e recuperiamo tutti i progetti dal nostro back-end.
     2. Stampiamo in console i risultati e verifichiamo di ricevere i dati correttamente.
-- [ ]Milestone 5
+- [x]Milestone 5
     1. Creiamo un nuovo componente ProjectCard, che corrisponde ad una card per visualizzare un progetto. Utilizziamo questo componente per visualizzare tutti i progetti ricevuti tramite API.
 - [ ]Bonus
     1. Gestire la paginazione dei risultati
