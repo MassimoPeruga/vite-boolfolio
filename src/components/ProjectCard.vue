@@ -27,12 +27,18 @@ export default {
             </div>
             <div :class="{ 'col': !project.img, 'col-md-8': project.img }">
                 <div class="card-body">
-                    <h3 class="card-title">{{ project.name }}</h3>
+                    <h3 class="card-title">
+                        {{ project.name }}
+                    </h3>
                     <p class="card-text fs-5">
                         <span>Repo: </span>
                         <a :href="project.repo_url">{{ project.repository }}</a>
                         <span class="fs-6">{{ isPublic }}</span>
-                    <div>Tipo: <strong>{{ project.type.title }}</strong></div>
+                        <span class="d-flex mt-2">Tipo:
+                            <strong class="ms-1"> {{ project.type.title }}</strong>
+                            <router-link :to="{ name: 'ProjectDetails', params: { slug: project.slug } }"
+                                class="btn btn-sm btn-info ms-auto">Maggiori dettagli</router-link>
+                        </span>
                     </p>
                 </div>
             </div>

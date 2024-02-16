@@ -1,5 +1,8 @@
 <script>
-import ProjectCard from './ProjectCard.vue';
+import AppHeader from '../components/AppHeader.vue';
+import AppFooter from '../components/AppFooter.vue';
+import LoaderComponent from '../components/LoaderComponent.vue';
+import ProjectCard from '../components/ProjectCard.vue';
 import axios from 'axios';
 export default {
     name: 'Main',
@@ -12,44 +15,45 @@ export default {
             },
             currentPage: 1,
             totalPages: 1,
+            loading: false,
         };
     },
-    components: { ProjectCard, },
+    components: {
+        AppHeader,
+        AppFooter,
+        LoaderComponent,
+        ProjectCard,
+    },
     created() {
         this.getProjects();
-        this.getPages();
     },
     methods: {
         getProjects(page) {
+            this.loading = true;
             axios.get(this.baseUrl + this.apiUrls.projects, {
                 params: {
                     page: page
                 }
             }).then(response => {
                 this.projects = response.data.results.data;
-            }).catch(error => {
-                console.error(error);
-            });
-        },
-
-        getPages() {
-            axios.get(this.baseUrl + this.apiUrls.projects).then(response => {
                 this.totalPages = response.data.results.last_page;
             }).catch(error => {
                 console.error(error);
+            }).finally(() => {
+                this.loading = false;
             });
         },
 
         nextPage() {
             if (this.currentPage < this.totalPages) {
-                this.currentPage += 1;
+                this.currentPage++;
                 this.getProjects(this.currentPage);
             }
         },
 
         prevPage() {
             if (this.currentPage > 1) {
-                this.currentPage -= 1;
+                this.currentPage--;
                 this.getProjects(this.currentPage);
             }
         },
@@ -59,13 +63,15 @@ export default {
 
 
 <template>
-    <main class="bg-secondary flex-grow-1 py-5 d-flex flex-column">
+    <AppHeader />
+    <LoaderComponent v-if="loading" />
+    <main class="bg-secondary flex-grow-1 py-5 d-flex flex-column" v-else>
         <div class="container row g-3 mx-auto">
             <div class="col col-md-6" v-for="project in projects">
                 <ProjectCard :project="project" />
             </div>
         </div>
-        <div class="mt-auto text-light d-flex justify-content-center align-items-center">
+        <div class="mt-auto text-light d-flex justify-content-center align-items-center" :class="{ 'd-none': !projects }">
             <button class="btn btn-secondary fs-3" :disabled="currentPage === 1" @click="prevPage()">
                 &lt;
             </button>
@@ -75,6 +81,7 @@ export default {
             </button>
         </div>
     </main>
+    <AppFooter />
 </template>
 
 <style lang="scss" scoped></style>
