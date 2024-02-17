@@ -1,4 +1,5 @@
 <script>
+import { store } from '../assets/js/_partials/_store';
 import AppHeader from '../components/AppHeader.vue';
 import AppFooter from '../components/AppFooter.vue';
 import LoaderComponent from '../components/LoaderComponent.vue';
@@ -8,11 +9,8 @@ export default {
     name: 'Main',
     data() {
         return {
+            store,
             projects: [],
-            baseUrl: 'http://127.0.0.1:8000',
-            apiUrls: {
-                projects: '/api/projects',
-            },
             currentPage: 1,
             totalPages: 1,
             loading: false,
@@ -30,7 +28,7 @@ export default {
     methods: {
         getProjects(page) {
             this.loading = true;
-            axios.get(this.baseUrl + this.apiUrls.projects, {
+            axios.get(store.baseUrl + store.apiUrls.projects, {
                 params: {
                     page: page
                 }

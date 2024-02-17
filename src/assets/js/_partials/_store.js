@@ -1,6 +1,9 @@
 import { reactive } from 'vue';
 
 export const store = reactive({
-    text: "",
-    boolean: true,
+    baseUrl: 'http://127.0.0.1:8000',
+    apiUrls: {
+        projects: '/api/projects',
+        img: '/storage/',
+    },
 });

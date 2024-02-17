@@ -1,4 +1,5 @@
 <script>
+import { store } from '../assets/js/_partials/_store';
 import axios from 'axios';
 import AppHeader from '../components/AppHeader.vue';
 import AppFooter from '../components/AppFooter.vue';
@@ -8,15 +9,11 @@ export default {
     name: 'ProjectDetails',
     data() {
         return {
+            store,
             project: {},
             badge: {
                 text: '',
                 class: '',
-            },
-            baseUrl: 'http://127.0.0.1:8000',
-            apiUrls: {
-                projects: '/api/projects',
-                img: '/storage/',
             },
             loading: false,
         };
@@ -36,7 +33,7 @@ export default {
     methods: {
         getProject() {
             this.loading = true;
-            axios.get(this.baseUrl + this.apiUrls.projects + '/' + this.$route.params.slug)
+            axios.get(store.baseUrl + store.apiUrls.projects + '/' + this.$route.params.slug)
                 .then((response) => {
                     if (response.data.success) {
                         this.project = response.data.result;
@@ -79,8 +76,8 @@ export default {
     <main class="bg-secondary flex-grow-1 py-5 d-flex flex-column" v-else>
         <div class="container">
             <div class="card">
-                <img :src="baseUrl + apiUrls.img + project.img" :alt="project.name + ' thumb'" class="card-img-top mx-auto"
-                    v-if="project.img">
+                <img :src="store.baseUrl + store.apiUrls.img + project.img" :alt="project.name + ' thumb'"
+                    class="card-img-top mx-auto" v-if="project.img">
                 <div class="card-body">
                     <h1 class="card-title text-center">{{ project.name }}</h1>
                     <hr>
