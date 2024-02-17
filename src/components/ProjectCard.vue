@@ -4,17 +4,26 @@ export default {
     data() {
         return {
             imgUrl: 'http://127.0.0.1:8000/storage/',
+            badge: {
+                text: '',
+                class: '',
+            }
         };
     },
     props: ['project',],
-    computed: {
-        isPublic() {
+    methods: {
+        setBadge() {
             if (this.project.is_public) {
-                return 'Pubblica';
+                this.badge.text = 'Pubblica';
+                this.badge.class = 'text-bg-success';
             } else {
-                return 'Privata';
+                this.badge.text = 'Privata';
+                this.badge.class = 'text-bg-secondary';
             }
         }
+    },
+    mounted() {
+        this.setBadge();
     },
 };
 </script>
@@ -31,9 +40,9 @@ export default {
                         {{ project.name }}
                     </h3>
                     <p class="card-text fs-5">
-                        <span>Repo: </span>
-                        <a :href="project.repo_url">{{ project.repository }}</a>
-                        <span class="fs-6">{{ isPublic }}</span>
+                        <span>Repo:</span>
+                        <a :href="project.repo_url" class="mx-2">{{ project.repository }}</a>
+                        <span class="fs-6 badge" :class="badge.class">{{ badge.text }}</span>
                         <span class="d-flex mt-2">Tipo:
                             <strong class="ms-1"> {{ project.type.title }}</strong>
                             <router-link :to="{ name: 'ProjectDetails', params: { slug: project.slug } }"

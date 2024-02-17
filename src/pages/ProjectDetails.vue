@@ -9,6 +9,10 @@ export default {
     data() {
         return {
             project: {},
+            badge: {
+                text: '',
+                class: '',
+            },
             baseUrl: 'http://127.0.0.1:8000',
             apiUrls: {
                 projects: '/api/projects',
@@ -26,6 +30,9 @@ export default {
         this.getProject();
         this.$watch(() => this.$route.params, (toParams, previusParams) => { this.getProject(); });
     },
+    mounted() {
+        this.setBadge();
+    },
     methods: {
         getProject() {
             this.loading = true;
@@ -42,7 +49,17 @@ export default {
                 }).finally(() => {
                     this.loading = false;
                 });
-        }
+        },
+
+        setBadge() {
+            if (this.project.is_public) {
+                this.badge.text = 'Pubblica';
+                this.badge.class = 'text-bg-success';
+            } else {
+                this.badge.text = 'Privata';
+                this.badge.class = 'text-bg-secondary';
+            }
+        },
     },
     computed: {
         isPublic() {
@@ -68,18 +85,18 @@ export default {
                     <h1 class="card-title text-center">{{ project.name }}</h1>
                     <hr>
                     <div class="card-text row">
-                        <div class="col-3" v-if="project.technologies.length > 0">
-                            <h6>Tecnologie usate:</h6>
+                        <div class="col-3 fs-4" v-if="project.technologies.length > 0">
+                            <h5>Tecnologie usate:</h5>
                             <ul>
                                 <li v-for="technology in project.technologies">{{ technology.title }}</li>
                             </ul>
                         </div>
                         <div class="col">
-                            <div class="text-center my-4 d-flex justify-content-evenly">
+                            <div class="text-center my-4 d-flex justify-content-evenly fs-4">
                                 <div v-if="project.repository">
-                                    <span>Repo: </span>
-                                    <a :href="project.repo_url">{{ project.repository }}</a>
-                                    <span class="fs-6">{{ isPublic }} </span>
+                                    <span>Repo:</span>
+                                    <a :href="project.repo_url" class="mx-2">{{ project.repository }}</a>
+                                    <span class="fs-6 badge" :class="badge.class">{{ badge.text }}</span>
                                 </div>
                                 <div v-if="project.type">
                                     <span>Tipo:
@@ -87,7 +104,7 @@ export default {
                                     </span>
                                 </div>
                             </div>
-                            <p v-if="project.assignment">
+                            <p v-if="project.assignment" class="fs-5">
                                 {{ project.assignment }}
                             </p>
                         </div>
