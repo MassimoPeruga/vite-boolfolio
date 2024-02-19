@@ -14,6 +14,7 @@ export default {
             currentPage: 1,
             totalPages: 1,
             loading: false,
+            paginationError: false
         };
     },
     components: {
@@ -23,18 +24,26 @@ export default {
         ProjectCard,
     },
     created() {
+        this.currentPage = this.$route.query.page ?? 1;
         this.getProjects();
     },
     methods: {
-        getProjects(page) {
+        getProjects() {
             this.loading = true;
             axios.get(store.baseUrl + store.apiUrls.projects, {
                 params: {
-                    page: page
+                    page: this.currentPage
                 }
             }).then(response => {
                 this.projects = response.data.results.data;
                 this.totalPages = response.data.results.last_page;
+                if (this.currentPage > this.totalPages) {
+                    this.loading = false;
+                    this.$router.push({
+                        path: '/page-not-found',
+                    })
+                }
+
             }).catch(error => {
                 console.error(error);
             }).finally(() => {
@@ -45,14 +54,22 @@ export default {
         nextPage() {
             if (this.currentPage < this.totalPages) {
                 this.currentPage++;
-                this.getProjects(this.currentPage);
+                this.$router.push({
+                    name: 'Projects',
+                    query: { page: this.currentPage },
+                });
+                this.getProjects();
             }
         },
 
         prevPage() {
             if (this.currentPage > 1) {
                 this.currentPage--;
-                this.getProjects(this.currentPage);
+                this.$router.push({
+                    name: 'Projects',
+                    query: { page: this.currentPage },
+                });
+                this.getProjects();
             }
         },
     },
@@ -62,6 +79,7 @@ export default {
 
 <template>
     <AppHeader />
+
     <LoaderComponent v-if="loading" />
     <main class="bg-secondary flex-grow-1 py-5 d-flex flex-column" v-else>
         <div class="container row g-3 mx-auto">
