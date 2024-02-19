@@ -35,10 +35,13 @@ export default {
             this.loading = true;
             axios.get(store.baseUrl + store.apiUrls.projects + '/' + this.$route.params.slug)
                 .then((response) => {
-                    if (response.data.success) {
+                    if (response.data.result) {
                         this.project = response.data.result;
                     } else {
-                        this.$router.push({ name: 'NotFound' })
+                        this.loading = false;
+                        this.$router.push({
+                            path: '/page-not-found',
+                        })
                     }
                 })
                 .catch((error) => {
