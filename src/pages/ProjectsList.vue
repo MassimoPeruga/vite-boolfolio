@@ -1,6 +1,7 @@
 <script>
 import { store } from '../assets/js/_partials/_store';
 import AppHeader from '../components/AppHeader.vue';
+import ProjectSearch from '../components/ProjectSearch.vue';
 import AppFooter from '../components/AppFooter.vue';
 import LoaderComponent from '../components/LoaderComponent.vue';
 import ProjectCard from '../components/ProjectCard.vue';
@@ -11,7 +12,7 @@ export default {
         return {
             store,
             projects: [],
-            currentPage: 1,
+            errors: [],
             totalPages: 1,
             loading: false,
             paginationError: false
@@ -19,25 +20,29 @@ export default {
     },
     components: {
         AppHeader,
+        ProjectSearch,
         AppFooter,
         LoaderComponent,
         ProjectCard,
     },
     created() {
-        this.currentPage = this.$route.query.page ?? 1;
+        store.projects.currentPage = this.$route.query.page ?? 1;
+        store.projects.searchKey = this.$route.query.key ?? null;
         this.getProjects();
     },
     methods: {
         getProjects() {
             this.loading = true;
+            this.errors = [];
             axios.get(store.baseUrl + store.apiUrls.projects, {
                 params: {
-                    page: this.currentPage
+                    page: store.projects.currentPage,
+                    key: store.projects.searchKey,
                 }
             }).then(response => {
                 this.projects = response.data.results.data;
                 this.totalPages = response.data.results.last_page;
-                if (this.currentPage > this.totalPages) {
+                if (store.projects.currentPage > this.totalPages) {
                     this.loading = false;
                     this.$router.push({
                         path: '/page-not-found',
@@ -46,28 +51,30 @@ export default {
 
             }).catch(error => {
                 console.error(error);
+                this.projects = [];
+                this.errors = error.response.data.errors; //TODO: array push
             }).finally(() => {
                 this.loading = false;
             });
         },
 
         nextPage() {
-            if (this.currentPage < this.totalPages) {
-                this.currentPage++;
+            if (store.projects.currentPage < this.totalPages) {
+                store.projects.currentPage++;
                 this.$router.push({
                     name: 'Projects',
-                    query: { page: this.currentPage },
+                    query: { page: store.projects.currentPage, key: store.projects.searchKey },
                 });
                 this.getProjects();
             }
         },
 
         prevPage() {
-            if (this.currentPage > 1) {
-                this.currentPage--;
+            if (store.projects.currentPage > 1) {
+                store.projects.currentPage--;
                 this.$router.push({
                     name: 'Projects',
-                    query: { page: this.currentPage },
+                    query: { page: store.projects.currentPage, key: store.projects.searchKey },
                 });
                 this.getProjects();
             }
@@ -82,17 +89,21 @@ export default {
 
     <LoaderComponent v-if="loading" />
     <main class="bg-secondary flex-grow-1 py-5 d-flex flex-column" v-else>
+
+        <ProjectSearch @search-project="getProjects" :errors="errors" />
+
         <div class="container row g-3 mx-auto">
             <div class="col col-md-6" v-for="project in projects">
                 <ProjectCard :project="project" />
             </div>
         </div>
         <div class="mt-auto text-light d-flex justify-content-center align-items-center" :class="{ 'd-none': !projects }">
-            <button class="btn btn-secondary fs-3" :disabled="currentPage === 1" @click="prevPage()">
+            <button class="btn btn-secondary fs-3" :disabled="store.projects.currentPage === 1" @click="prevPage()">
                 &lt;
             </button>
-            <span class="mx-2">Pagina: {{ currentPage }} / {{ totalPages }}</span>
-            <button class="btn btn-secondary fs-3" :disabled="currentPage === totalPages" @click="nextPage()">
+            <span class="mx-2">Pagina: {{ store.projects.currentPage }} / {{ totalPages }}</span>
+            <button class="btn btn-secondary fs-3" :disabled="store.projects.currentPage === totalPages"
+                @click="nextPage()">
                 >
             </button>
         </div>

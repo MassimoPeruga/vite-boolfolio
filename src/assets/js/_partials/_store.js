@@ -6,4 +6,8 @@ export const store = reactive({
         projects: '/api/projects',
         img: '/storage/',
     },
+    projects: {
+        currentPage: 1,
+        searchKey: null,
+    }
 });

@@ -1,9 +1,11 @@
 <script>
+import { store } from '../assets/js/_partials/_store';
 export default {
     name: 'Header',
     data() {
         return {
-            routes: ['HomePage', 'Projects'],
+            store,
+            routes: [{ name: 'HomePage', query: { page: '', key: '' } }, { name: 'Projects', query: { page: 1, key: '' } }],
         };
     },
 };
@@ -15,7 +17,8 @@ export default {
             <h2 class="m-0">Boolfolio</h2>
             <ul class="list-unstyled d-flex m-0">
                 <li class="px-2" v-for="route in routes">
-                    <router-link :to="{ name: route }">{{ route }}</router-link>
+                    <router-link :to="{ name: route.name, query: { page: route.query.page, key: route.query.key } }">{{
+                        route.name }}</router-link>
                 </li>
             </ul>
         </div>
@@ -23,3 +26,4 @@ export default {
 </template>
 
 <style lang="scss" scoped></style>
+

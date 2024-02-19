@@ -115,6 +115,10 @@ export default {
                     </p>
                 </div>
             </div>
+            <router-link
+                :to="{ name: 'Projects', query: { page: store.projects.currentPage, key: store.projects.searchKey } }"
+                class="btn btn-primary mt-2">Torna
+                alla lista</router-link>
         </div>
     </main>
     <AppFooter />
