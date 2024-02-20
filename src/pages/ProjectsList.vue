@@ -26,9 +26,11 @@ export default {
         ProjectCard,
     },
     created() {
-        store.projects.currentPage = this.$route.query.page ?? 1;
-        store.projects.searchKey = this.$route.query.key ?? null;
-        this.getProjects();
+        this.init();
+
+        this.$watch(() => this.$route.params, (toParams, previusParams) => {
+            this.init();
+        });
     },
     methods: {
         getProjects() {
@@ -52,7 +54,7 @@ export default {
             }).catch(error => {
                 console.error(error);
                 this.projects = [];
-                this.errors = error.response.data.errors; //TODO: array push
+                this.errors = error.response.data.errors;
             }).finally(() => {
                 this.loading = false;
             });
@@ -61,23 +63,29 @@ export default {
         nextPage() {
             if (store.projects.currentPage < this.totalPages) {
                 store.projects.currentPage++;
-                this.$router.push({
-                    name: 'Projects',
-                    query: { page: store.projects.currentPage, key: store.projects.searchKey },
-                });
-                this.getProjects();
+                this.changePage();
             }
         },
 
         prevPage() {
             if (store.projects.currentPage > 1) {
                 store.projects.currentPage--;
-                this.$router.push({
-                    name: 'Projects',
-                    query: { page: store.projects.currentPage, key: store.projects.searchKey },
-                });
-                this.getProjects();
+                this.changePage();
             }
+        },
+
+        changePage() {
+            this.$router.push({
+                name: 'Projects',
+                query: { page: store.projects.currentPage, key: store.projects.searchKey },
+            });
+            this.getProjects();
+        },
+
+        init() {
+            store.projects.currentPage = this.$route.query.page ?? 1;
+            store.projects.searchKey = this.$route.query.key ?? null;
+            this.getProjects();
         },
     },
 };
